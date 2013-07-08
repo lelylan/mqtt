@@ -2,6 +2,8 @@ var mongoose = require('mongoose')
   , mosca    = require('mosca')
   , debug    = require('debug')('lelylan');
 
+var Device = require('./app/models/devices/device');
+
 var server
   , ascoltatore = {
       type: 'mongo',
@@ -21,10 +23,13 @@ var setup = function() {
   debug("SETTING UP AUTHORIZATION");
 
   server.authenticate = function(client, username, password, callback) {
-    var pass = (username == 'device-id' && password == 'device-secret')
+    // TODO add the device id to the client so that we understand which devices can be recognized
+    // TODO can we use the same channel
 
     debug('AUTHENTICATING', client.id, username, password);
-    callback(null, pass);
+    Device.findOne({ _id: username, secret: password }, function (err, doc) {
+      callback(null, !!doc);
+    });
   };
 
   server.authorizeSubscribe = function() {
@@ -38,7 +43,7 @@ var setup = function() {
   };
 }
 
-// MQTT server initialization
+// MQTT server
 
 var server = new mosca.Server(opts);
 server.on('ready', setup);

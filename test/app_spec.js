@@ -1,3 +1,5 @@
+// TODO refactoring
+
 var async = require('async')
   , mqtt = require('mqtt')
   , ascoltatori = require('ascoltatori')
@@ -9,8 +11,14 @@ var async = require('async')
 chai.use(require('sinon-chai'));
 chai.use(require('chai-fuzzy'));
 
+var Factory = require('factory-lady')
+  , Device = require('../app/models/devices/device');
+
+require('./factories/devices/device');
+
 var instance
-  , secondInstance;
+  , secondInstance
+  , device;
 
 var ascoltatore = {
       type: 'mongo',
@@ -33,6 +41,14 @@ describe('MQTT client',function() {
   beforeEach(function(done) {
     instance = require('../app')
     instance.on('ready', done)
+  });
+
+  beforeEach(function(done) {
+      Factory.create('device', {
+    }, function(doc) {
+      device = doc;
+      done();
+    });
   });
 
   afterEach(function(done) {
@@ -59,11 +75,11 @@ describe('MQTT client',function() {
   describe('with valid client ID and secret', function() {
 
     beforeEach(function() {
-      opts.username = 'device-id';
-      opts.password = 'device-secret';
+      opts.username = device.id;
+      opts.password = device.secret;
     });
 
-    it('connects with valid device id and secret', function(done) {
+    it('connects', function(done) {
       buildClient(done, function(client) {
         client.connect(opts);
 
@@ -75,14 +91,14 @@ describe('MQTT client',function() {
     });
   });
 
-  describe.only('with not valid client ID or secret', function() {
+  describe('with not valid client ID or secret', function() {
 
     beforeEach(function() {
       opts.username = 'not-valid';
       opts.password = 'not-valid';
     });
 
-    it('connects with valid device id and secret', function(done) {
+    it('does not connect', function(done) {
       buildClient(done, function(client) {
         client.connect(opts);
 
