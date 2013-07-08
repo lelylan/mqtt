@@ -1,3 +1,7 @@
+// TODO can we use the same channel to set and read?
+// TODO should be /device/id or device/id as topic?
+// TODO check also the payload for testing
+
 var mongoose = require('mongoose')
   , mosca    = require('mosca')
   , debug    = require('debug')('lelylan');
@@ -15,17 +19,14 @@ var server
       port: process.env.PORT || 1883,
       backend: ascoltatore };
 
-// TODO can we use the same channel
-// TODO should be /device/id or device/id as topic?
-// TODO check also the payload for testing
 
 // Authorization
 var setup = function() {
   server.authenticate = function(client, username, password, callback) {
     debug('Authenticating', client.id, username, password);
     Device.findOne({ _id: username, secret: password }, function (err, doc) {
-      callback(null, doc);
       if (doc) client.device_id = doc.id
+      callback(null, doc);
     });
   };
 

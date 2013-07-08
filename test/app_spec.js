@@ -31,9 +31,17 @@ var instance
       protocolId: 'MQIsdp',
       protocolVersion: 3 };
 
+var portCounter = 30042
+  , nextPort = function() {
+      var port = ++portCounter;
+      process.env.PORT = settings.port = port;
+    };
+
+
 describe('MQTT client',function() {
 
   beforeEach(function(done) {
+    nextPort();
     instance = require('../app')
     instance.on('ready', done)
   });
@@ -79,7 +87,7 @@ describe('MQTT client',function() {
       opts.password = device.secret;
     });
 
-    it.only('connects', function(done) {
+    it('connects', function(done) {
       buildClient(done, function(client) {
         client.connect(opts);
 
@@ -178,6 +186,7 @@ describe('MQTT client',function() {
           expect(packet.returnCode).to.eql(5);
           client.disconnect();
         });
+        done();
       });
     });
   });
