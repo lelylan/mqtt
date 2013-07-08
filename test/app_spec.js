@@ -104,8 +104,8 @@ describe('MQTT client',function() {
         });
 
         client.publish({
+          qos: 1,
           topic: 'devices/' + device.id,
-          qos: 0,
           payload: JSON.stringify({ properties: [] }),
           messageId: messageId
         });
@@ -113,6 +113,14 @@ describe('MQTT client',function() {
     });
 
     it('can not publish to a not authorized device topic', function(done) {
+      done();
+    });
+
+    it('subscribes to the authorized device topic', function(done) {
+      done();
+    });
+
+    it('can not subscribe to a not authorized device topic', function(done) {
       done();
     });
   });

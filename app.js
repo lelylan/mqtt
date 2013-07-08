@@ -32,14 +32,14 @@ var setup = function() {
     });
   };
 
-  server.authorizeSubscribe = function(client, topic, payload, callback) {
-    debug('AUTHORIZING SUBSCRIPTION', client, topic, payload);
-    callback(null, true);
-  };
-
   server.authorizePublish = function(client, topic, payload, callback) {
     var device_id = topic.split('/')[1]
     debug('AUTHORIZING PUBLISHING', client.id, payload, topic, device_id);
+    callback(null, true);
+  };
+
+  server.authorizeSubscribe = function(client, topic, payload, callback) {
+    debug('AUTHORIZING SUBSCRIPTION', client, topic, payload);
     callback(null, true);
   };
 }
