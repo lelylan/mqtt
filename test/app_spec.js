@@ -30,7 +30,6 @@ var ascoltatore = {
 
 describe('MQTT client',function() {
 
-
   beforeEach(function(done) {
     instance = require('../app')
     instance.on('ready', done)
@@ -49,20 +48,23 @@ describe('MQTT client',function() {
     });
   });
 
+  function buildClient(done, callback) {
+    var client = mqtt.createConnection(settings.port, settings.host);
+
+    client.once('error', done);
+    client.on('connected', function() { callback(client) });
+    client.stream.once('close', function() { done() });
+  }
+
   describe('with valid client ID and secret', function() {
 
-    function buildClient(done, callback) {
-      var client = mqtt.createConnection(settings.port, settings.host);
-
-      client.once('error', done);
-      client.on('connected', function() { callback(client) });
-      client.stream.once('close', function() { done() });
-    }
+    beforeEach(function() {
+      opts.username = 'device-id';
+      opts.password = 'device-secret';
+    });
 
     it('connects with valid device id and secret', function(done) {
       buildClient(done, function(client) {
-        opts.username = 'device-id';
-        opts.password = 'device-secret'
         client.connect(opts);
 
         client.on('connack', function(packet) {
@@ -71,5 +73,24 @@ describe('MQTT client',function() {
         });
       });
     });
-  })
+  });
+
+  describe.only('with not valid client ID or secret', function() {
+
+    beforeEach(function() {
+      opts.username = 'not-valid';
+      opts.password = 'not-valid';
+    });
+
+    it('connects with valid device id and secret', function(done) {
+      buildClient(done, function(client) {
+        client.connect(opts);
+
+        client.on('connack', function(packet) {
+          expect(packet.returnCode).to.eql(5);
+          client.disconnect();
+        });
+      });
+    });
+  });
 });
