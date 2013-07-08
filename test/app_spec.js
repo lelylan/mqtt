@@ -16,27 +16,26 @@ var Factory = require('factory-lady')
 
 require('./factories/devices/device');
 
-var instance
-  , secondInstance
-  , device;
-
-var ascoltatore = {
-      type: 'mongo',
-      uri: process.env.MONGOLAB_JOBS_HOST,
-      db: process.env.MONGOLAB_JOBS_DB,
-      pubsubCollection: 'mqtt',
-      mongo: {} }
-  , settings = {
-      port: process.env.PORT || 11884,
-      backend: ascoltatore }
-  , opts = {
-      keepalive: 1000,
-      clientId: 'mosca_' + require('crypto').randomBytes(16).toString('hex'),
-      protocolId: 'MQIsdp',
-      protocolVersion: 3 };
 
 
 describe('MQTT client',function() {
+
+  var instance
+    , device
+    , ascoltatore = {
+        type: 'mongo',
+        uri: process.env.MONGOLAB_JOBS_HOST,
+        db: process.env.MONGOLAB_JOBS_DB,
+        pubsubCollection: 'mqtt',
+        mongo: {} }
+    , settings = {
+        port: process.env.PORT || 11884,
+        backend: ascoltatore }
+    , opts = {
+        keepalive: 1000,
+        clientId: 'mosca_' + require('crypto').randomBytes(16).toString('hex'),
+        protocolId: 'MQIsdp',
+        protocolVersion: 3 };
 
   beforeEach(function(done) {
     instance = require('../app')
@@ -44,8 +43,7 @@ describe('MQTT client',function() {
   });
 
   beforeEach(function(done) {
-      Factory.create('device', {
-    }, function(doc) {
+    Factory.create('device', {}, function(doc) {
       device = doc;
       done();
     });
@@ -53,7 +51,6 @@ describe('MQTT client',function() {
 
   afterEach(function(done) {
     var instances = [instance];
-    if (secondInstance) { instances = [secondInstance].concat(instances) }
 
     async.parallel(instances.map(function(i) {
       return function(cb) {
@@ -72,6 +69,13 @@ describe('MQTT client',function() {
     client.stream.once('close', function() { done() });
   }
 
+  function buildAndConnect(done, callback) {
+    buildClient(done, function(client) {
+      client.connect(opts);
+      client.on('connack', function(packet) { callback(client) });
+    });
+  }
+
   describe('with valid client ID and secret', function() {
 
     beforeEach(function() {
@@ -88,6 +92,28 @@ describe('MQTT client',function() {
           client.disconnect();
         });
       });
+    });
+
+    it.only('publishes to the authorizes device topic', function(done) {
+      buildAndConnect(done, function(client) {
+        var messageId = Math.floor(65535 * Math.random());
+
+        client.on('puback', function(packet) {
+          expect(packet).to.have.property('messageId', messageId);
+          client.disconnect();
+        });
+
+        client.publish({
+          topic: 'devices/' + device.id,
+          qos: 0,
+          payload: JSON.stringify({ properties: [] }),
+          messageId: messageId
+        });
+      });
+    });
+
+    it('can not publish to a not authorized device topic', function(done) {
+      done();
     });
   });
 
