@@ -9,27 +9,26 @@ var async = require('async')
 chai.use(require('sinon-chai'));
 chai.use(require('chai-fuzzy'));
 
+var instance
+  , secondInstance;
+
+var ascoltatore = {
+      type: 'mongo',
+      uri: process.env.MONGOLAB_JOBS_HOST,
+      db: process.env.MONGOLAB_JOBS_DB,
+      pubsubCollection: 'mqtt',
+      mongo: {} }
+  , settings = {
+      port: process.env.PORT || 11884,
+      backend: ascoltatore }
+  , opts = {
+      keepalive: 1000,
+      clientId: 'mosca_' + require('crypto').randomBytes(16).toString('hex'),
+      protocolId: 'MQIsdp',
+      protocolVersion: 3 };
 
 
 describe('MQTT client',function() {
-
-  var instance
-    , secondInstance;
-
-  var ascoltatore = {
-        type: 'mongo',
-        uri: process.env.MONGOLAB_JOBS_HOST,
-        db: process.env.MONGOLAB_JOBS_DB,
-        pubsubCollection: 'mqtt',
-        mongo: {} }
-    , settings = {
-        port: process.env.PORT || 11884,
-        backend: ascoltatore }
-    , opts = {
-        keepalive: 1000,
-        clientId: 'mosca_' + require('crypto').randomBytes(16).toString('hex'),
-        protocolId: 'MQIsdp',
-        protocolVersion: 3 };
 
 
   beforeEach(function(done) {
@@ -59,7 +58,6 @@ describe('MQTT client',function() {
       client.on('connected', function() { callback(client) });
       client.stream.once('close', function() { done() });
     }
-
 
     it('connects with valid device id and secret', function(done) {
       buildClient(done, function(client) {
