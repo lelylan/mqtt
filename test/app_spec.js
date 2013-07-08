@@ -1,4 +1,5 @@
-// TODO refactoring
+var Factory = require('factory-lady')
+  , Device = require('../app/models/devices/device');
 
 var async = require('async')
   , mqtt = require('mqtt')
@@ -11,31 +12,26 @@ var async = require('async')
 chai.use(require('sinon-chai'));
 chai.use(require('chai-fuzzy'));
 
-var Factory = require('factory-lady')
-  , Device = require('../app/models/devices/device');
-
 require('./factories/devices/device');
 
-
+var instance
+  , device
+  , ascoltatore = {
+      type: 'mongo',
+      uri: process.env.MONGOLAB_JOBS_HOST,
+      db: process.env.MONGOLAB_JOBS_DB,
+      pubsubCollection: 'mqtt',
+      mongo: {} }
+  , settings = {
+      port: process.env.PORT || 11884,
+      backend: ascoltatore }
+  , opts = {
+      keepalive: 1000,
+      clientId: 'mosca_' + require('crypto').randomBytes(16).toString('hex'),
+      protocolId: 'MQIsdp',
+      protocolVersion: 3 };
 
 describe('MQTT client',function() {
-
-  var instance
-    , device
-    , ascoltatore = {
-        type: 'mongo',
-        uri: process.env.MONGOLAB_JOBS_HOST,
-        db: process.env.MONGOLAB_JOBS_DB,
-        pubsubCollection: 'mqtt',
-        mongo: {} }
-    , settings = {
-        port: process.env.PORT || 11884,
-        backend: ascoltatore }
-    , opts = {
-        keepalive: 1000,
-        clientId: 'mosca_' + require('crypto').randomBytes(16).toString('hex'),
-        protocolId: 'MQIsdp',
-        protocolVersion: 3 };
 
   beforeEach(function(done) {
     instance = require('../app')
@@ -83,7 +79,7 @@ describe('MQTT client',function() {
       opts.password = device.secret;
     });
 
-    it('connects', function(done) {
+    it.only('connects', function(done) {
       buildClient(done, function(client) {
         client.connect(opts);
 
@@ -96,8 +92,10 @@ describe('MQTT client',function() {
 
     describe('when publishing', function() {
 
-      it.only('publishes to the authorizes device topic', function(done) {
+      it('publishes to the authorizes device topic', function(done) {
+
         buildAndConnect(done, function(client) {
+
           var messageId = Math.floor(65535 * Math.random());
 
           client.on('puback', function(packet) {
@@ -115,23 +113,57 @@ describe('MQTT client',function() {
       });
 
       it('can not publish to a not authorized device topic', function(done) {
-        done();
+
+        buildAndConnect(done, function(client) {
+
+          // it exists no negation of auth, it just disconnect the client
+          client.publish({
+            qos: 1,
+            topic: 'devices/not-valid',
+            payload: JSON.stringify({ properties: [] }),
+            messageId: 42
+          });
+        });
       });
     });
 
     describe('when subscribing', function() {
 
-      it('subscribes to the authorized device topic', function(done) {
-        done();
+      it('subscribes to the authorized device', function(done) {
+
+        buildAndConnect(done, function(client) {
+
+          var subscriptions = [{ topic: 'devices/' + device.id, qos: 0 }];
+
+          client.on('suback', function(packet) {
+            client.disconnect();
+          });
+
+          client.subscribe({
+            subscriptions: subscriptions,
+            messageId: 42
+          });
+        });
       });
 
-      it('can not subscribe to a not authorized device topic', function(done) {
-        done();
+      it('can not subscribe to a not authorized device', function(done) {
+
+        buildAndConnect(done, function(client) {
+
+          var subscriptions = [{ topic: 'devices/not-valid', qos: 0 }];
+
+          // it exists no negation of auth, it just disconnect the client
+          client.subscribe({
+            subscriptions: subscriptions,
+            messageId: 42
+          });
+        });
       });
     });
   });
 
-  describe('with not valid client ID or secret', function() {
+
+  describe('with a not valid client ID or secret', function() {
 
     beforeEach(function() {
       opts.username = 'not-valid';
