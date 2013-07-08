@@ -94,34 +94,40 @@ describe('MQTT client',function() {
       });
     });
 
-    it.only('publishes to the authorizes device topic', function(done) {
-      buildAndConnect(done, function(client) {
-        var messageId = Math.floor(65535 * Math.random());
+    describe('when publishing', function() {
 
-        client.on('puback', function(packet) {
-          expect(packet).to.have.property('messageId', messageId);
-          client.disconnect();
-        });
+      it.only('publishes to the authorizes device topic', function(done) {
+        buildAndConnect(done, function(client) {
+          var messageId = Math.floor(65535 * Math.random());
 
-        client.publish({
-          qos: 1,
-          topic: 'devices/' + device.id,
-          payload: JSON.stringify({ properties: [] }),
-          messageId: messageId
+          client.on('puback', function(packet) {
+            expect(packet).to.have.property('messageId', messageId);
+            client.disconnect();
+          });
+
+          client.publish({
+            qos: 1,
+            topic: 'devices/' + device.id,
+            payload: JSON.stringify({ properties: [] }),
+            messageId: messageId
+          });
         });
+      });
+
+      it('can not publish to a not authorized device topic', function(done) {
+        done();
       });
     });
 
-    it('can not publish to a not authorized device topic', function(done) {
-      done();
-    });
+    describe('when subscribing', function() {
 
-    it('subscribes to the authorized device topic', function(done) {
-      done();
-    });
+      it('subscribes to the authorized device topic', function(done) {
+        done();
+      });
 
-    it('can not subscribe to a not authorized device topic', function(done) {
-      done();
+      it('can not subscribe to a not authorized device topic', function(done) {
+        done();
+      });
     });
   });
 
