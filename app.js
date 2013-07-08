@@ -21,8 +21,10 @@ var setup = function() {
   debug("SETTING UP AUTHORIZATION");
 
   server.authenticate = function(client, username, password, callback) {
-    debug('AUTHENTICATING', client.id, username, password);
-    callback(null, true);
+    var response = (username == 'device-id' && password == 'device-secret')
+
+    debug('AUTHENTICATING', client.id, username, password, response);
+    callback(null, response);
   };
 
   server.authorizeSubscribe = function() {

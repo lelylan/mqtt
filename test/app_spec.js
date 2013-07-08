@@ -24,17 +24,13 @@ describe('MQTT client',function() {
         mongo: {} }
     , settings = {
         port: process.env.PORT || 11884,
-        backend: ascoltatore };
+        backend: ascoltatore }
+    , opts = {
+        keepalive: 1000,
+        clientId: 'mosca_' + require('crypto').randomBytes(16).toString('hex'),
+        protocolId: 'MQIsdp',
+        protocolVersion: 3 };
 
-
-  function buildOpts() {
-    return {
-      keepalive: 1000,
-      clientId: 'mosca_' + require('crypto').randomBytes(16).toString('hex'),
-      protocolId: 'MQIsdp',
-      protocolVersion: 3
-    };
-  }
 
   beforeEach(function(done) {
     instance = require('../app')
@@ -43,7 +39,6 @@ describe('MQTT client',function() {
 
   afterEach(function(done) {
     var instances = [instance];
-
     if (secondInstance) { instances = [secondInstance].concat(instances) }
 
     async.parallel(instances.map(function(i) {
@@ -58,21 +53,19 @@ describe('MQTT client',function() {
   describe('with valid client ID and secret', function() {
 
     function buildClient(done, callback) {
-      var client = mqtt.createConnection(settings.port, settings.host, 'alice', 'password');
+      var client = mqtt.createConnection(settings.port, settings.host);
 
       client.once('error', done);
-      client.stream.once('close', function() {
-        console.log('CLOSE');
-        done()
-      });
-      client.on('connected', function() {
-        callback(client)
-      });
+      client.on('connected', function() { callback(client) });
+      client.stream.once('close', function() { done() });
     }
 
-    it('connects', function(done) {
+
+    it('connects with valid device id and secret', function(done) {
       buildClient(done, function(client) {
-        client.connect(buildOpts());
+        opts.username = 'device-id';
+        opts.password = 'device-secret'
+        client.connect(opts);
 
         client.on('connack', function(packet) {
           expect(packet.returnCode).to.eql(0);
@@ -80,5 +73,5 @@ describe('MQTT client',function() {
         });
       });
     });
-  });
+  })
 });
