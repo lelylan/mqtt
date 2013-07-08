@@ -9,22 +9,24 @@ var async = require('async')
 chai.use(require('sinon-chai'));
 chai.use(require('chai-fuzzy'));
 
-var instance
-  , secondInstance;
 
-var ascoltatore = {
-      type: 'mongo',
-      uri: process.env.MONGOLAB_JOBS_HOST,
-      db: process.env.MONGOLAB_JOBS_DB,
-      pubsubCollection: 'mqtt',
-      mongo: {} }
-  , settings = {
-      port: process.env.PORT || 11884,
-      backend: ascoltatore };
 
-describe('MQTT server',function() {
+describe('MQTT client',function() {
 
-  // client options
+  var instance
+    , secondInstance;
+
+  var ascoltatore = {
+        type: 'mongo',
+        uri: process.env.MONGOLAB_JOBS_HOST,
+        db: process.env.MONGOLAB_JOBS_DB,
+        pubsubCollection: 'mqtt',
+        mongo: {} }
+    , settings = {
+        port: process.env.PORT || 11884,
+        backend: ascoltatore };
+
+
   function buildOpts() {
     return {
       keepalive: 1000,
@@ -34,16 +36,11 @@ describe('MQTT server',function() {
     };
   }
 
-  // mqtt server
   beforeEach(function(done) {
     instance = require('../app')
-    instance.on('ready', function() {
-      console.log('MQTT server ready');
-      done();
-    })
+    instance.on('ready', done)
   });
 
-  // close all mqtt servers after the spec execution
   afterEach(function(done) {
     var instances = [instance];
 
@@ -58,27 +55,29 @@ describe('MQTT server',function() {
     });
   });
 
-  function buildClient(done, callback) {
-    var client = mqtt.createConnection(settings.port, settings.host);
+  describe('with valid client ID and secret', function() {
 
-    client.once('error', done);
-    client.stream.once('close', function() {
-      console.log('CLOSE')
-      done()
-    });
-    client.on('connected', function() {
-      console.log('CONNECTED');
-      callback(client)
-    });
-  }
+    function buildClient(done, callback) {
+      var client = mqtt.createConnection(settings.port, settings.host, 'alice', 'password');
 
-  it('should support connecting and disconnecting', function(done) {
-    buildClient(done, function(client) {
-      client.connect(buildOpts());
+      client.once('error', done);
+      client.stream.once('close', function() {
+        console.log('CLOSE');
+        done()
+      });
+      client.on('connected', function() {
+        callback(client)
+      });
+    }
 
-      client.on('connack', function(packet) {
-        console.log('CONNACK')
-        client.disconnect();
+    it('connects', function(done) {
+      buildClient(done, function(client) {
+        client.connect(buildOpts());
+
+        client.on('connack', function(packet) {
+          expect(packet.returnCode).to.eql(0);
+          client.disconnect();
+        });
       });
     });
   });

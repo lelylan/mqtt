@@ -20,9 +20,20 @@ var server
 var setup = function() {
   debug("SETTING UP AUTHORIZATION");
 
-  //server.authenticate       = function() { debug('AUTHENTICATING'); return true };
-  //server.authorizeSubscribe = function() { debug('AUTHORIZE SUBSCRIBE'); return true };
-  //server.authorizePublish   = function() { debug('AUTHORIZE PUBLISH'); return true };
+  server.authenticate = function(client, username, password, callback) {
+    debug('AUTHENTICATING', client.id, username, password);
+    callback(null, true);
+  };
+
+  server.authorizeSubscribe = function() {
+    debug('AUTHORIZE SUBSCRIBE');
+    callback(null, true);
+  };
+
+  server.authorizePublish = function() {
+    debug('AUTHORIZE PUBLISH');
+    callback(null, true);
+  };
 }
 
 // MQTT server initialization
