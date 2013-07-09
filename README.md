@@ -28,15 +28,15 @@ to accept or refuse an MQTT connection.
 
 During the connection phase the client needs to set username and password. For lelylan the
 username is the `device id` and the password is the `device secret`. When the credentialas
-are not valid, the connection is rejected. Follow an example in Node.js.
-
-Note that if you try to subscribe or publish to a different device from the one you
-have authenticated, the connection will be rejected.
+are not valid, the connection is rejected. Note that if you try to subscribe or publish to a
+different device from the one you have authenticated, the connection will be rejected.
 
 
 ## Clients
 
-```
+Follows a client example in Node.js.
+
+```javascript
 mqtt = require('mqtt');
 
 // MQTT server
