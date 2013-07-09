@@ -2,6 +2,7 @@ var Factory = require('factory-lady')
   , Device = require('../app/models/devices/device');
 
 var async = require('async')
+  , server = require('../lib/server')
   , mqtt = require('mqtt')
   , ascoltatori = require('ascoltatori')
   , chai = require('chai')
@@ -33,8 +34,7 @@ var instance
 
 var portCounter = 30042
   , nextPort = function() {
-      var port = ++portCounter;
-      process.env.PORT = settings.port = port;
+      process.env.PORT = settings.port = ++portCounter;
     };
 
 
@@ -42,8 +42,11 @@ describe('MQTT client',function() {
 
   beforeEach(function(done) {
     nextPort();
-    instance = require('../app')
-    instance.on('ready', done)
+    console.log(settings);
+    instance = new server.start(settings);
+    instance.on('ready', function() {
+      done()
+    })
   });
 
   beforeEach(function(done) {
@@ -87,7 +90,7 @@ describe('MQTT client',function() {
       opts.password = device.secret;
     });
 
-    it.only('connects', function(done) {
+    it('connects', function(done) {
       buildClient(done, function(client) {
         client.connect(opts);
 

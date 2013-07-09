@@ -7,9 +7,9 @@ var ascoltatore = {
       db: process.env.MONGOLAB_JOBS_DB,
       pubsubCollection: 'mqtt',
       mongo: {} }
-  , opts = {
+  , settings = {
       port: process.env.PORT || 1883,
       backend: ascoltatore };
 
-var app = new server.start(opts);
+var app = new server.start(settings);
 module.exports = app
