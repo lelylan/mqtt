@@ -3,7 +3,8 @@
   "description": "Lelylan realtime system based on websockets",
   "author": "Lelylan Dev Team <touch@lelylan.com>",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "test": "make bail"
   },
   "version": "0.1.0-7",
   "dependencies": {
