@@ -42,11 +42,8 @@ describe('MQTT client',function() {
 
   beforeEach(function(done) {
     nextPort();
-    console.log(settings);
     instance = new server.start(settings);
-    instance.on('ready', function() {
-      done()
-    })
+    instance.on('ready', done)
   });
 
   beforeEach(function(done) {
@@ -101,77 +98,76 @@ describe('MQTT client',function() {
       });
     });
 
-    //describe('when publishing', function() {
+    describe('when publishing', function() {
 
-      //it('publishes to the authorizes device topic', function(done) {
+      it('publishes to the authorizes device topic', function(done) {
 
-        //buildAndConnect(done, function(client) {
+        buildAndConnect(done, function(client) {
 
-          //var messageId = Math.floor(65535 * Math.random());
+          var messageId = Math.floor(65535 * Math.random());
 
-          //client.on('puback', function(packet) {
-            //console.log(packet);
-            //expect(packet).to.have.property('messageId', messageId);
-            //client.disconnect();
-          //});
+          client.on('puback', function(packet) {
+            expect(packet).to.have.property('messageId', messageId);
+            client.disconnect();
+          });
 
-          //client.publish({
-            //qos: 1,
-            //topic: 'devices/' + device.id,
-            //payload: JSON.stringify({ properties: [] }),
-            //messageId: messageId
-          //});
-        //});
-      //});
+          client.publish({
+            qos: 1,
+            topic: 'devices/' + device.id,
+            payload: JSON.stringify({ properties: [] }),
+            messageId: messageId
+          });
+        });
+      });
 
-      //it('can not publish to a not authorized device topic', function(done) {
+      it('can not publish to a not authorized device topic', function(done) {
 
-        //buildAndConnect(done, function(client) {
+        buildAndConnect(done, function(client) {
 
-          //// it exists no negation of auth, it just disconnect the client
-          //client.publish({
-            //qos: 1,
-            //topic: 'devices/not-valid',
-            //payload: JSON.stringify({ properties: [] }),
-            //messageId: 42
-          //});
-        //});
-      //});
-    //});
+          // it exists no negation of auth, it just disconnect the client
+          client.publish({
+            qos: 1,
+            topic: 'devices/not-valid',
+            payload: JSON.stringify({ properties: [] }),
+            messageId: 42
+          });
+        });
+      });
+    });
 
-    //describe('when subscribing', function() {
+    describe('when subscribing', function() {
 
-      //it('subscribes to the authorized device', function(done) {
+      it('subscribes to the authorized device', function(done) {
 
-        //buildAndConnect(done, function(client) {
+        buildAndConnect(done, function(client) {
 
-          //var subscriptions = [{ topic: 'devices/' + device.id, qos: 0 }];
+          var subscriptions = [{ topic: 'devices/' + device.id, qos: 0 }];
 
-          //client.on('suback', function(packet) {
-            //client.disconnect();
-          //});
+          client.on('suback', function(packet) {
+            client.disconnect();
+          });
 
-          //client.subscribe({
-            //subscriptions: subscriptions,
-            //messageId: 42
-          //});
-        //});
-      //});
+          client.subscribe({
+            subscriptions: subscriptions,
+            messageId: 42
+          });
+        });
+      });
 
-      //it('can not subscribe to a not authorized device', function(done) {
+      it('can not subscribe to a not authorized device', function(done) {
 
-        //buildAndConnect(done, function(client) {
+        buildAndConnect(done, function(client) {
 
-          //var subscriptions = [{ topic: 'devices/not-valid', qos: 0 }];
+          var subscriptions = [{ topic: 'devices/not-valid', qos: 0 }];
 
-          //// it exists no negation of auth, it just disconnect the client
-          //client.subscribe({
-            //subscriptions: subscriptions,
-            //messageId: 42
-          //});
-        //});
-      //});
-    //});
+          // it exists no negation of auth, it just disconnect the client
+          client.subscribe({
+            subscriptions: subscriptions,
+            messageId: 42
+          });
+        });
+      });
+    });
   });
 
 
@@ -184,14 +180,27 @@ describe('MQTT client',function() {
 
     it('does not connect', function(done) {
       buildClient(done, function(client) {
-        client.connect(opts);
 
-        client.on('connack', function(packet) {
-          expect(packet.returnCode).to.eql(5);
-          client.disconnect();
-        });
-        done();
+        // it exists no negation of auth, it just disconnect the client
+        client.connect(opts);
       });
     });
+
+    //beforeEach(function() {
+      //opts.username = 'not-valid';
+      //opts.password = 'not-valid';
+    //});
+
+    //it.only('does not connect', function(done) {
+      //buildClient(done, function(client) {
+        //client.connect(opts);
+
+        //client.on('connack', function(packet) {
+          //expect(packet.returnCode).to.eql(5);
+          //client.disconnect();
+        //});
+        //done();
+      //});
+    //});
   });
 });
