@@ -87,7 +87,7 @@ describe('MQTT client',function() {
       opts.password = device.secret;
     });
 
-    it('connects', function(done) {
+    it.only('connects', function(done) {
       buildClient(done, function(client) {
         client.connect(opts);
 
@@ -107,6 +107,7 @@ describe('MQTT client',function() {
           var messageId = Math.floor(65535 * Math.random());
 
           client.on('puback', function(packet) {
+            console.log(packet);
             expect(packet).to.have.property('messageId', messageId);
             client.disconnect();
           });
