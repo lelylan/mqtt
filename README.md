@@ -34,7 +34,7 @@ different device from the one you have authenticated, the connection will be rej
 
 ## Clients
 
-Follows a client example in Node.js.
+Follows a client example in Node.js (connect to the local development server).
 
 ```javascript
 mqtt = require('mqtt');
@@ -61,14 +61,14 @@ opts.username = device.id;
 opts.password = device.secret;
 
 // Initial connection to the MQTT server
-var client = mqtt.createConnection(1884, 'mqtt.lely.io');
+var client = mqtt.createConnection(1884);
 
 // publish of a message
 client.on('connected', function(client) {
   client.connect(opts);
 
   client.publish({
-    qos: 1,
+    qos: 0,
     topic: topic,
     payload: JSON.stringify(payload),
     messageId: Math.floor(65535 * Math.random())
