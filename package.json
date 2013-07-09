@@ -20,7 +20,8 @@
     "mosca": "~0.7.3",
     "ascoltatori": "~0.7.4",
     "debug": "~0.7.2",
-    "mqtt": "~0.2.10"
+    "mqtt": "~0.2.10",
+    "foreman": "0.0.25"
   },
   "engines": {
     "node": "~0.8.x",

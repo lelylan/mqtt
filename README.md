@@ -8,33 +8,84 @@ MQTT server for Lelylan [Lelylan](http://dev.lelylan.com)
 The MQTT node is tested against Node 0.8.8.
 
 
-## Installation
-
-Clone the repository.
-
-    git clone git@github.com:lelylan/mqtt.git
-
-Run Node server.
-
-    foreman start
-
-
 ## Getting Started
 
-* Run `foreman start`
-* Open the [server](http://localhost:8004)
+* Clone `git clone git@github.com:lelylan/mqtt.git`
+* Run `npm install && npm install -g foreman`
 
+Before making the server run you need to define a `.env` file containing the needed
+environment variables. [Here](https://gist.github.com/andreareginato/5957085) an example.
+
+* Run `nf start`
+
+The MQTT server is now listening to the default port `1883`.
+
+
+## Authorizations
+
+Lelylan uses [authorizer.js](https://github.com/lelylan/mqtt/blob/master/lib/authorizer.js)
+to accept or refuse an MQTT connection.
+
+During the connection phase the client needs to set username and password. For lelylan the
+username is the `device id` and the password is the `device secret`. When the credentialas
+are not valid, the connection is rejected. Follow an example in Node.js.
+
+Note that if you try to subscribe or publish to a different device from the one you
+have authenticated, the connection will be rejected.
+
+
+## Clients
+
+```
+mqtt = require('mqtt');
+
+// MQTT server
+var host = 'mqtt.lelylan.com';
+var port = '1883';
+
+// Device related info
+var device  = { id: '<device-id>', secret: '<device-secret>' }
+var topic   = 'devices/' + device.id;
+var payload = { properties: [{ id: '<property-id>', value: '<value>' }] };
+
+// MQTT client settings
+var opts = {
+  keepalive: 1000,
+  protocolId: 'MQIsdp',
+  protocolVersion: 3,
+  clientId: 'client-' + device.id
+}
+
+// MQTT device credentials
+opts.username = device.id;
+opts.password = device.secret;
+
+// Initial connection to the MQTT server
+var client = mqtt.createConnection(1884, 'mqtt.lely.io');
+
+// publish of a message
+client.on('connected', function(client) {
+  client.connect(opts);
+
+  client.publish({
+    qos: 1,
+    topic: topic,
+    payload: JSON.stringify(payload),
+    messageId: Math.floor(65535 * Math.random())
+  });
+});
+```
 
 ## Deploy
 
-Follow [getting started with jitsu](https://www.nodejitsu.com/getting-started/).
+Follow [deploying  MQTT](#todo).
 
 
 ## Resources
 
 * [Mosca](https://github.com/mcollina/mosca)
 * [Ascoltatori](https://github.com/mcollina/ascoltatori)
-* [Physical API](http://dev.lelylan.com/api/physicals)
+* [Lelylan Physical API](http://dev.lelylan.com/api/physicals)
 
 
 ## Contributing
@@ -45,9 +96,8 @@ Do not forget to provide specs to your contribution.
 ### Running specs
 
 * Fork and clone the repository
-* Run `gem install foreman`
 * Run `npm install`
-* Run `foreman run mocha test/app_spec.js --env .test.env`
+* Run `npm test`
 
 
 ## Coding guidelines
