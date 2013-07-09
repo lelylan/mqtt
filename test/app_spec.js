@@ -34,7 +34,7 @@ var instance
 
 var portCounter = 30042
   , nextPort = function() {
-      process.env.PORT = settings.port = ++portCounter;
+      settings.port = ++portCounter;
     };
 
 
@@ -185,22 +185,5 @@ describe('MQTT client',function() {
         client.connect(opts);
       });
     });
-
-    //beforeEach(function() {
-      //opts.username = 'not-valid';
-      //opts.password = 'not-valid';
-    //});
-
-    //it.only('does not connect', function(done) {
-      //buildClient(done, function(client) {
-        //client.connect(opts);
-
-        //client.on('connack', function(packet) {
-          //expect(packet.returnCode).to.eql(5);
-          //client.disconnect();
-        //});
-        //done();
-      //});
-    //});
   });
 });
