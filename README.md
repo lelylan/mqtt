@@ -23,7 +23,7 @@ The MQTT server is now listening to the default port `1883`.
 
 ## Authorizations
 
-Lelylan uses [authorizer.js](https://github.com/lelylan/mqtt/blob/master/lib/authorizer.js)
+Lelylan defines [authorizer.js](https://github.com/lelylan/mqtt/blob/master/lib/authorizer.js)
 to accept or refuse an MQTT connection.
 
 During the connection phase the client needs to set username and password. For lelylan the
