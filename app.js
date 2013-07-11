@@ -8,8 +8,12 @@ var ascoltatore = {
       pubsubCollection: 'mqtt',
       mongo: {} }
   , settings = {
-      port: process.env.PORT || 1883,
+      port: process.env.NODE_PORT || 1883,
       backend: ascoltatore };
 
 var app = new server.start(settings);
-module.exports = app
+
+app.on('ready', function() {
+  debug('MQTT Server listening on port', process.env.NODE_PORT)
+});
+
