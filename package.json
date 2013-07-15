@@ -14,7 +14,8 @@
     "async": "~0.1.22",
     "bunyan": "~0.21.3",
     "mosca": "~0.8.2",
-    "foreman": "0.0.25"
+    "foreman": "0.0.25",
+    "debug": "~0.7.2"
   },
   "engines": {
     "node": "~0.8.x",
