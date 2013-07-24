@@ -15,7 +15,9 @@
     "bunyan": "~0.21.3",
     "mosca": "~0.8.2",
     "foreman": "0.0.25",
-    "debug": "~0.7.2"
+    "debug": "~0.7.2",
+    "mqtt": "~0.2.11",
+    "ascoltatori": "~0.11.1"
   },
   "engines": {
     "node": "~0.8.x",

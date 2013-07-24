@@ -16,4 +16,4 @@ node_modules
 *.log
 
 # Procfile env
-*.env
+.production.env
