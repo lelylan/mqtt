@@ -9,6 +9,7 @@ var ascoltatore = {
       mongo: {} }
   , settings = {
       port: process.env.NODE_PORT || 1883,
+      logger: { level: 20 },
       backend: ascoltatore };
 
 var app = new server.start(settings);
