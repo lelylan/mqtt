@@ -12,12 +12,12 @@
     "mongoose": "~3.3.1",
     "request": "~2.11.4",
     "async": "~0.1.22",
-    "bunyan": "~0.21.3",
-    "mosca": "~0.8.2",
-    "foreman": "0.0.25",
+    "mosca": "~0.10.0",
+    "mqtt": "~0.3.1",
+    "ascoltatori": "~0.11.3",
     "debug": "~0.7.2",
-    "mqtt": "~0.2.11",
-    "ascoltatori": "~0.11.1"
+    "bunyan": "~0.21.3",
+    "foreman": "0.0.25"
   },
   "engines": {
     "node": "~0.8.x",
@@ -34,6 +34,5 @@
     "sinon": "~1.7.3",
     "sinon-chai": "~2.4.0",
     "chai-fuzzy": "~1.3.0"
-  },
-  "subdomain": "lelylan-websockets"
+  }
 }
