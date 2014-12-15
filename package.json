@@ -8,16 +8,16 @@
   },
   "version": "0.1.0-7",
   "dependencies": {
-    "mongodb": "~1.1.11",
-    "mongoose": "~3.3.1",
-    "request": "~2.11.4",
-    "async": "~0.1.22",
-    "mosca": "~0.10.0",
+    "ascoltatori": "^0.11.5",
+    "async": "^0.1.22",
+    "bunyan": "^0.21.4",
+    "debug": "^0.7.4",
+    "foreman": "0.0.25",
+    "mongodb": "^1.1.11",
+    "mongoose": "^3.3.1",
+    "mosca": "^0.26.2",
     "mqtt": "~0.3.1",
-    "ascoltatori": "~0.11.3",
-    "debug": "~0.7.2",
-    "bunyan": "~0.21.3",
-    "foreman": "0.0.25"
+    "request": "^2.11.4"
   },
   "engines": {
     "node": "~0.10.x",
