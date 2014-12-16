@@ -1,12 +1,12 @@
 {
-  "name": "mqtt",
+  "name": "lelylan.mqtt",
   "description": "Lelylan MQTT broket",
+  "version": "0.1",
   "author": "Lelylan Dev Team <dev@lelylan.com>",
   "scripts": {
     "start": "node app.js",
     "test": "make bail"
   },
-  "version": "0.1.0-7",
   "dependencies": {
     "ascoltatori": "^0.11.5",
     "async": "^0.1.22",
