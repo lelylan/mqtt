@@ -9,17 +9,10 @@ var ascoltatore = {
       mongo: {} }
   , settings = {
       port: process.env.NODE_PORT || 1883,
-      logger: { level: 20 },
       backend: ascoltatore };
 
 var app = new server.start(settings);
 
 app.on('ready', function() {
   debug('MQTT Server listening on port', process.env.NODE_PORT)
-
-  if (process.getuid() === 0)
-    require('fs').stat(__filename, function(err, stats) {
-      if (err) return console.log(err)
-      process.setuid(stats.uid);
-    });
 });

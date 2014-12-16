@@ -1,7 +1,7 @@
 {
-  "name": "api",
-  "description": "Lelylan realtime system based on websockets",
-  "author": "Lelylan Dev Team <touch@lelylan.com>",
+  "name": "mqtt",
+  "description": "Lelylan MQTT broket",
+  "author": "Lelylan Dev Team <dev@lelylan.com>",
   "scripts": {
     "start": "node app.js",
     "test": "make bail"
