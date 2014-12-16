@@ -1,7 +1,7 @@
 {
   "name": "lelylan.mqtt",
   "description": "Lelylan MQTT broket",
-  "version": "0.1",
+  "version": "0.1.0",
   "author": "Lelylan Dev Team <dev@lelylan.com>",
   "scripts": {
     "start": "node app.js",
