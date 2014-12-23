@@ -6,7 +6,6 @@ var ascoltatore = {
       redis: require('redis'),
       db: 12,
       port: 6379,
-      return_buffers: true,
       host: process.env.REDIS_HOST }
   , settings = {
       port: process.env.NODE_PORT || 1883,
