@@ -2,11 +2,12 @@ var server = require('./lib/server')
   , debug  = require('debug')('lelylan');
 
 var ascoltatore = {
-      type: 'mongo',
-      uri: process.env.MONGOLAB_JOBS_HOST,
-      db: process.env.MONGOLAB_JOBS_DB,
-      pubsubCollection: 'mqtt',
-      mongo: {} }
+      type: 'redis',
+      redis: require('redis'),
+      db: 12,
+      port: 6379,
+      return_buffers: true,
+      host: process.env.REDIS_HOST }
   , settings = {
       port: process.env.NODE_PORT || 1883,
       backend: ascoltatore };
