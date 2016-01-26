@@ -19,7 +19,7 @@ The MQTT node is tested against Node 0.8.8.
 ## Resources
 
 * [How to Build an High Availability MQTT Cluster for the Internet of Things](https://medium.com/@lelylan/how-to-build-an-high-availability-mqtt-cluster-for-the-internet-of-things-8011a06bd000)
-* [Lelylan MQTT Documentation](http://dev.lelylan.com/api/physicals/mqtt)
+* [Lelylan MQTT Documentation](http://dev.lelylan.com/makers#mqtt)
 * [Lelylan Physical API](http://dev.lelylan.com/api/physicals)
 * [Mosca](https://github.com/mcollina/mosca)
 * [Ascoltatori](https://github.com/mcollina/ascoltatori)
