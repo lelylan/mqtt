@@ -1,28 +1,20 @@
-# Lelylan MQTT Server
-
-MQTT server for Lelylan
-
+# Lelylan MQTT Server/Broker
 
 ## Requirements
 
-The MQTT node is tested against Node 0.8.8.
+The MQTT server/broker is tested against Node 0.10.36
 
 
 ## Getting Started
 
-* Clone `git clone git@github.com:lelylan/mqtt.git`
-* Run `npm install && npm install -g foreman`
-* Run `mongod` (MongoDB up and running)
-* Run `nf start`
-
+$ git clone git@github.com:lelylan/mqtt.git && cd mqtt
+$ npm install && npm install -g foreman
+$ nf start
 
 ## Resources
 
+* [Lelylan MQTT Documentation](http://dev.lelylan.com/api#api-physical-mqtt)
 * [How to Build an High Availability MQTT Cluster for the Internet of Things](https://medium.com/@lelylan/how-to-build-an-high-availability-mqtt-cluster-for-the-internet-of-things-8011a06bd000)
-* [Lelylan MQTT Documentation](http://dev.lelylan.com/makers#mqtt)
-* [Lelylan Makers API](http://dev.lelylan.com/makers)
-* [Mosca](https://github.com/mcollina/mosca)
-* [Ascoltatori](https://github.com/mcollina/ascoltatori)
 
 
 ## Contributing
