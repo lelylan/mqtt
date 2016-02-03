@@ -28,9 +28,8 @@ Do not forget to provide specs to your contribution.
 
 ### Running specs
 
-* Fork and clone the repository
-* Run `npm install`
-* Run `npm test`
+    $ npm install
+    $ npm test
 
 
 ## Coding guidelines
