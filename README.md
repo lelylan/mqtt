@@ -7,9 +7,9 @@ The MQTT server/broker is tested against Node 0.10.36
 
 ## Getting Started
 
-$ git clone git@github.com:lelylan/mqtt.git && cd mqtt
-$ npm install && npm install -g foreman
-$ nf start
+    $ git clone git@github.com:lelylan/mqtt.git && cd mqtt
+    $ npm install && npm install -g foreman
+    $ nf start
 
 ## Resources
 
