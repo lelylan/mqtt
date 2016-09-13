@@ -10,6 +10,11 @@ The MQTT server/broker is tested against Node 0.10.36
     $ git clone git@github.com:lelylan/mqtt.git && cd mqtt
     $ npm install && npm install -g foreman
     $ nf start
+
+## Install with docker
+
+    $ docker build --tag=mqtt .
+    $ docker run -d -it --name mqtt mqtt
     
 When installing the service in production set [lelylan environment variables](https://github.com/lelylan/lelylan/blob/master/README.md#production).
 
