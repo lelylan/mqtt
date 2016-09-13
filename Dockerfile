@@ -1,17 +1,20 @@
-# node image
-FROM node:0.10-onbuild
+FROM node:0.10
+MAINTAINER Federico Gonzalez <https://github.com/fedeg>
 
-# docker mantainer
-MAINTAINER reggie
+RUN apt-get update -qq \
+ && apt-get install -y libzmq3 libzmq3-dev build-essential make \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# add the files to load
-ADD ./ .
+RUN npm config set registry http://registry.npmjs.org
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
 
-# install all needed packages
-RUN npm install
+RUN npm install -g foreman && npm cache clean
+ADD package.json /usr/src/app/
+RUN npm install && npm cache clean
+ADD . /usr/src/app
 
-# expose port
 EXPOSE 1883
 
-# execute app.js
-ENTRYPOINT ["node", "app.js"]
+CMD [ "nf", "start" ]
